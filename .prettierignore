@@ -1,0 +1,8 @@
+.agents
+.git
+.next
+node_modules
+.env
+.env.*
+*.tsbuildinfo
+package-lock.json
