@@ -13,6 +13,9 @@ The current demo focuses on sportswear suppliers in Hong Kong and Mainland
 China. Every company, RFQ, response, message, and verification event in the
 repository is fictional.
 
+**Live demo:** [corneer.vercel.app](https://corneer.vercel.app/). Vercel deploys
+the `main` branch of this repository.
+
 ## Current scope
 
 This repository is a frontend-only product demonstration. It includes:

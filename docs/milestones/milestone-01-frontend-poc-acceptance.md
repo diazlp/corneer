@@ -48,6 +48,7 @@ data before implementing authentication or persistence.
 - [x] Language selection persists across routes and reloads.
 - [x] Fresh visitors default to Bahasa Indonesia, with ID left of EN.
 - [x] Local development runs on port 3101.
+- [x] The public frontend demo is deployed on Vercel from GitHub `main`.
 - [x] Phone routes avoid page-level horizontal overflow; mobile supplier
       filters, conversations, and verification cases remain navigable.
 - [x] ESLint passes.

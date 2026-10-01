@@ -146,6 +146,8 @@ Test at minimum:
 ## Development workflow
 
 `npm run dev` serves the local demo at <http://localhost:3101>.
+The public review build is at <https://corneer.vercel.app/> and deploys from the
+GitHub `main` branch. It remains a frontend-only demonstration.
 
 ```powershell
 npm run format
