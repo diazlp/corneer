@@ -1,6 +1,12 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect } from "react";
 
 export default function NotFound() {
+  useEffect(() => {
+    document.title = "Page not found | Corneer";
+  }, []);
   return (
     <main className="not-found">
       <span>404</span>

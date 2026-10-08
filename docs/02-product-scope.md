@@ -78,6 +78,22 @@ assurances without a defensible, documented audit scope.
 
 ## POC success condition
 
+The buyer entry has one primary task: describe an apparel order, review
+companies, and choose who to contact. Product examples and supplier/admin
+demonstrations remain secondary. Buyers do not need to learn the term RFQ to
+start; design specifications explain the term tech pack in context.
+
+New briefs produce an in-memory company preview. Category, selected
+capabilities, and estimated units per style/color are compared with fictional
+company-reported profile fields. Missing capability listings are unconfirmed,
+not evidence of incapability. Minimum-order conflicts are estimates requiring
+confirmation. This is deterministic demo filtering, not audited matching.
+
+Profiles and responses explain tradeoffs and suggested questions rather than
+unexplained fit percentages. A preview is not a quotation or a published RFQ;
+no supplier receives it. Only an explicit share action opens a demo conversation
+with the named company. Shortlisting alone never reveals identity.
+
 The current frontend succeeds when a reviewer can understand the complete
 journey in a few minutes and give concrete feedback about missing information.
 It does not validate marketplace demand.

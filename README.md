@@ -5,7 +5,7 @@
 [![Status](https://img.shields.io/badge/status-frontend%20POC-D8FF62)](#current-scope)
 
 Corneer is a proof of concept for a focused B2B sourcing network. It helps
-verified buyers discover apparel suppliers, publish private sourcing requests,
+verified buyers discover apparel suppliers, prepare private sourcing briefs,
 compare supplier responses, and reveal their company identity only when they
 choose to continue a conversation.
 
@@ -52,7 +52,12 @@ npm run dev
 
 Open <http://localhost:3101>.
 
-Use the **View demo as** control in the header to move between the public,
+Start with **Describe your order**, or **Walk through an example** to review
+fictional supplier responses. New briefs create company previews; no suppliers
+are contacted and no quotation is fabricated. Save a company, deliberately
+share the demo company identity with that recipient, then open its conversation.
+
+Use the **Demo view** control in the top demo bar to move between the public,
 buyer, supplier, and administrator experiences. Protected workspaces are only
 simulated in this POC; the role switcher is not an authorization mechanism.
 
@@ -65,11 +70,11 @@ simulated in this POC; the role switcher is not an authorization mechanism.
 | `/suppliers/[id]`              | Everyone               | Review one supplier, its products, and verification summary |
 | `/products`                    | Everyone               | Browse representative products and find their suppliers     |
 | `/buyer/rfqs`                  | Buyer demo             | Review sourcing requests and progress                       |
-| `/buyer/rfqs/new`              | Buyer demo             | Create a structured private RFQ                             |
+| `/buyer/rfqs/new`              | Buyer demo             | Preview a structured apparel order                          |
 | `/buyer/rfqs/[id]`             | Buyer demo             | Compare responses, shortlist suppliers, and reveal identity |
 | `/supplier/opportunities`      | Supplier demo          | Browse relevant verified-buyer opportunities                |
 | `/supplier/opportunities/[id]` | Supplier demo          | Review an RFQ and submit a response                         |
-| `/messages`                    | Buyer or supplier demo | Continue a mutually accepted conversation                   |
+| `/messages`                    | Buyer or supplier demo | Continue after explicit buyer identity sharing              |
 | `/admin/verification`          | Administrator demo     | Review evidence and record verification decisions           |
 
 ## Quality gate
@@ -81,14 +86,17 @@ npm run format
 npm run check
 ```
 
-The checks cover formatting, ESLint, TypeScript, and the optimized production
-build.
+The checks cover formatting, ESLint, TypeScript, sourcing/identity assertions,
+the optimized production build, and actual SEO/sharing-bot HTTP responses.
 
 ## Documentation
 
 - [`docs/01-architecture.md`](docs/01-architecture.md) — current frontend boundaries, state, and future backend seam.
 - [`docs/02-product-scope.md`](docs/02-product-scope.md) — product promise, personas, trust language, and POC exclusions.
 - [`docs/03-frontend-guide.md`](docs/03-frontend-guide.md) — route map, role journeys, component ownership, and browser checks.
+- [`docs/04-seo-and-brand.md`](docs/04-seo-and-brand.md) — page titles, crawl rules, sharing thumbnails, canonical host, and logo assets.
+- [`docs/milestones/milestone-02-buyer-clarity.md`](docs/milestones/milestone-02-buyer-clarity.md) — connected buyer journey checks.
+- [`docs/milestones/milestone-03-seo-and-brand.md`](docs/milestones/milestone-03-seo-and-brand.md) — SEO and brand acceptance checks.
 - [`docs/milestones/milestone-01-frontend-poc-acceptance.md`](docs/milestones/milestone-01-frontend-poc-acceptance.md) — acceptance checklist for the current demonstration.
 
 ## Data and verification disclaimer

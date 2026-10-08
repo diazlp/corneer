@@ -1,123 +1,143 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
-import {
-  ArrowLeft,
-  CalendarDays,
-  CheckCheck,
-  ChevronDown,
-  MoreHorizontal,
-  Paperclip,
-  Search,
-  Send,
-  ShieldCheck,
-  Video,
-} from "lucide-react";
-import { conversations, getSupplier } from "@/lib/data";
+import { ArrowLeft, CalendarDays, Send, ShieldCheck } from "lucide-react";
+import { getSupplier } from "@/lib/data";
+import { threadKey } from "@/lib/sourcing";
 import { useDemo } from "@/components/demo-provider";
 
-const initialMessages = [
-  {
-    id: 1,
-    side: "them",
-    text: "Hello Nadia, thank you for shortlisting our response. We reviewed the additional construction notes.",
-    time: "09:46",
-  },
-  {
-    id: 2,
-    side: "them",
-    text: "We can support the flatlock and bonded hem requirements. For the recycled fabric, we can prepare options from two GRS-certified mill partners.",
-    time: "09:48",
-  },
-  {
-    id: 3,
-    side: "me",
-    text: "Thanks, Lina. Could you prepare swatches in both the lightweight and midweight qualities? We would also like to understand your sampling timeline.",
-    time: "10:14",
-  },
-  {
-    id: 4,
-    side: "them",
-    text: "Yes. We can prepare the recycled fabric swatches this week. First proto samples would take approximately 14–18 days after receiving the complete tech packs.",
-    time: "10:42",
-  },
-];
-
-export function MessageCenter() {
-  const { toast } = useDemo();
-  const [activeId, setActiveId] = useState(conversations[0].id);
-  const [messages, setMessages] = useState(initialMessages);
-  const [draft, setDraft] = useState("");
+export function MessageCenter({ initialKey }: { initialKey?: string }) {
+  const {
+    requests,
+    responses,
+    reveals,
+    messages,
+    sendMessage,
+    meetings,
+    requestMeeting,
+    role,
+    t,
+  } = useDemo();
+  const [selectedKey, setSelectedKey] = useState(initialKey ?? "");
+  const [drafts, setDrafts] = useState<Record<string, string>>({});
   const [showInbox, setShowInbox] = useState(false);
-  const active = conversations.find(
-    (conversation) => conversation.id === activeId,
-  )!;
-  const supplier = getSupplier(active.supplierId)!;
-
+  const [meetingOpen, setMeetingOpen] = useState(false);
+  const threads = requests.flatMap((request) =>
+    (reveals[request.id] ?? []).flatMap((id) => {
+      const supplier = getSupplier(id);
+      return supplier && (role !== "supplier" || id === "pearl-river")
+        ? [{ key: threadKey(request.id, id), request, supplier }]
+        : [];
+    }),
+  );
+  const active = threads.find((item) => item.key === selectedKey) ?? threads[0];
+  const supplierView = role === "supplier";
+  const title = active
+    ? `${supplierView ? "Northline Athletics ApS" : active.supplier.name} — ${active.request.title} | Corneer`
+    : "Conversations & meeting proposals | Corneer";
+  if (!active)
+    return (
+      <div className="container empty-state">
+        <title>{title}</title>
+        <ShieldCheck size={32} />
+        <h1>
+          {supplierView
+            ? "No buyer has shared identity yet"
+            : "Choose a company before starting a conversation"}
+        </h1>
+        <p>
+          {supplierView
+            ? "A conversation appears after a buyer chooses your company and shares their identity."
+            : "Review companies, save one to your shortlist, then deliberately share your identity with that company."}
+        </p>
+        <Link
+          href={
+            supplierView
+              ? "/supplier/opportunities"
+              : "/buyer/rfqs/rfq-recycled-running"
+          }
+          className="button button-dark"
+        >
+          {supplierView ? "Review buyer requests" : "Walk through an example"}
+        </Link>
+        {!supplierView && (
+          <Link href="/buyer/rfqs" className="text-link">
+            My requests
+          </Link>
+        )}
+      </div>
+    );
+  const draft = drafts[active.key] ?? "";
+  const setDraft = (text: string) =>
+    setDrafts((current) => ({ ...current, [active.key]: text }));
+  const suggestion = supplierView
+    ? "Thank you for sharing your order. Could we review the specifications, style quantities, and target delivery before confirming a quotation?"
+    : (responses.find(
+        (item) =>
+          item.rfqId === active.request.id &&
+          item.supplierId === active.supplier.id,
+      )?.question ??
+      "Could you confirm the minimum per style and color, material documentation, sampling time, and availability for our delivery date?");
   const send = () => {
     if (!draft.trim()) return;
-    setMessages((current) => [
-      ...current,
-      { id: Date.now(), side: "me", text: draft.trim(), time: "Now" },
-    ]);
+    sendMessage(active.key, draft);
     setDraft("");
   };
-
   return (
     <div className={`message-app${showInbox ? " show-inbox" : ""}`}>
+      <title>{title}</title>
       <aside className="conversation-panel">
         <div className="conversation-heading">
           <div>
-            <span className="workspace-label">Inbox</span>
+            <span className="workspace-label">Your conversations</span>
             <h1>Messages</h1>
           </div>
-          <button>
-            <MoreHorizontal />
-          </button>
         </div>
-        <label className="conversation-search">
-          <Search />
-          <input placeholder="Search conversations" />
-        </label>
-        <div className="conversation-tabs">
-          <button className="active">All</button>
-          <button>
-            Unread <span>2</span>
-          </button>
-          <button>Archived</button>
-        </div>
+        <p className="inbox-note">
+          {supplierView
+            ? "Buyers appear here only after sharing their identity with your company."
+            : "Only companies you shared your identity with appear here."}
+        </p>
         <div className="conversation-list">
-          {conversations.map((conversation) => (
+          {threads.map((thread) => (
             <button
-              key={conversation.id}
-              className={conversation.id === activeId ? "active" : ""}
+              key={thread.key}
+              className={thread.key === active.key ? "active" : ""}
               onClick={() => {
-                setActiveId(conversation.id);
+                setSelectedKey(thread.key);
                 setShowInbox(false);
+                setMeetingOpen(false);
               }}
             >
               <span
                 className="conversation-avatar"
-                style={{
-                  background: getSupplier(conversation.supplierId)?.logoColor,
-                }}
+                style={{ background: thread.supplier.logoColor }}
               >
-                {conversation.initials}
+                {supplierView ? "NA" : thread.supplier.shortName}
               </span>
               <span className="conversation-copy">
-                <strong>{conversation.counterpart}</strong>
-                <small>{conversation.rfq}</small>
-                <p>{conversation.preview}</p>
-              </span>
-              <span className="conversation-meta">
-                <small>{conversation.time}</small>
-                {conversation.unread > 0 && <i>{conversation.unread}</i>}
+                <strong>
+                  {supplierView
+                    ? "Northline Athletics ApS"
+                    : thread.supplier.name}
+                </strong>
+                <small>{thread.request.title}</small>
+                <p>
+                  {messages[thread.key]?.at(-1)?.text ??
+                    t("Ready to discuss your order")}
+                </p>
               </span>
             </button>
           ))}
         </div>
+        <Link
+          className="inbox-note text-link"
+          href={supplierView ? "/supplier/opportunities" : "/buyer/rfqs"}
+        >
+          {supplierView ? "Opportunities" : "My requests"}
+        </Link>
       </aside>
-
       <section className="chat-panel">
         <header className="chat-header">
           <button
@@ -128,89 +148,160 @@ export function MessageCenter() {
             <ArrowLeft />
           </button>
           <div className="chat-company">
-            <span style={{ background: supplier.logoColor }}>
-              {supplier.shortName}
+            <span style={{ background: active.supplier.logoColor }}>
+              {supplierView ? "NA" : active.supplier.shortName}
             </span>
             <div>
-              <strong>{active.counterpart}</strong>
-              <small>
-                <i />
-                Usually replies {supplier.responseTime}
-              </small>
+              <strong>
+                {supplierView
+                  ? "Northline Athletics ApS"
+                  : active.supplier.name}
+              </strong>
+              <small>{supplierView ? "Buyer" : active.supplier.type}</small>
             </div>
           </div>
-          <div>
-            <button onClick={() => toast("Meeting request prepared")}>
-              <CalendarDays />
-              Request meeting
-            </button>
-            <button>
-              <Video />
-            </button>
-            <button>
-              <MoreHorizontal />
-            </button>
-          </div>
+          <button
+            className="button button-secondary"
+            aria-expanded={meetingOpen}
+            onClick={() => setMeetingOpen(!meetingOpen)}
+          >
+            <CalendarDays size={16} />
+            Propose a meeting
+          </button>
         </header>
         <div className="opportunity-context">
           <ShieldCheck />
-          <span>Conversation opened after mutual interest</span>
-          <strong>{active.rfq}</strong>
-          <button>
-            View opportunity <ChevronDown />
-          </button>
+          <strong>{active.request.title}</strong>
+          {supplierView ? (
+            <details>
+              <summary>View order</summary>
+              <p>{active.request.quantity}</p>
+              <p>{active.request.material}</p>
+              <p>{active.request.description}</p>
+            </details>
+          ) : (
+            <Link href={`/buyer/rfqs/${active.request.id}`}>View order</Link>
+          )}
         </div>
         <div className="chat-scroll">
-          <div className="chat-date">
-            <span>Today</span>
-          </div>
           <div className="system-message">
             <ShieldCheck />
             <p>
-              <strong>Northline Athletics revealed its identity</strong>Both
-              companies can now view business profiles and choose to exchange
-              contact details.
+              <strong>Company identity shared for this conversation</strong>
+              Northline Athletics ApS · Copenhagen · northline.run
             </p>
           </div>
-          {messages.map((message) => (
-            <div className={`chat-message ${message.side}`} key={message.id}>
-              {message.side === "them" && (
-                <span
-                  className="message-avatar"
-                  style={{ background: supplier.logoColor }}
+          <p className="request-notice">
+            Demo conversation. Messages and meeting proposals stay in this
+            session; nothing is sent externally.
+          </p>
+          {meetings[active.key] && (
+            <div className="meeting-proposal" role="status">
+              <CalendarDays />
+              <div>
+                <strong>Meeting proposed</strong>
+                <p>{meetings[active.key]}</p>
+                <small>
+                  Awaiting confirmation. No calendar invitation sent.
+                </small>
+              </div>
+            </div>
+          )}
+          {meetingOpen && (
+            <form
+              className="meeting-form"
+              onSubmit={(event) => {
+                event.preventDefault();
+                const values = new FormData(event.currentTarget);
+                requestMeeting(
+                  active.key,
+                  `${String(values.get("date")).replace("T", " · ")} · ${values.get("zone")}`,
+                );
+                setMeetingOpen(false);
+              }}
+            >
+              <h3>Suggest a time to discuss the order</h3>
+              <label className="field">
+                <span>Date and time</span>
+                <input type="datetime-local" name="date" required />
+              </label>
+              <label className="field">
+                <span>Time zone</span>
+                <select name="zone" defaultValue="Asia/Bangkok">
+                  <option>Asia/Bangkok</option>
+                  <option>Europe/Copenhagen</option>
+                  <option>UTC</option>
+                </select>
+              </label>
+              <div className="response-actions">
+                <button
+                  type="button"
+                  className="button button-secondary"
+                  onClick={() => setMeetingOpen(false)}
                 >
-                  {supplier.shortName}
-                </span>
-              )}
+                  Cancel
+                </button>
+                <button className="button button-dark" type="submit">
+                  Save meeting proposal
+                </button>
+              </div>
+            </form>
+          )}
+          {(messages[active.key] ?? []).map((message) => (
+            <div
+              className={`chat-message ${supplierView ? (message.side === "me" ? "them" : "me") : message.side}`}
+              key={message.id}
+            >
               <div>
                 <p>{message.text}</p>
                 <span>
-                  {message.time}
-                  {message.side === "me" && <CheckCheck />}
+                  {message.side === "me" ? t("Buyer") : t("Supplier")} ·{" "}
+                  {t("Demo message")}
                 </span>
               </div>
             </div>
           ))}
+          {!messages[active.key]?.length && (
+            <div className="conversation-starter">
+              <span className="eyebrow">A useful first question</span>
+              <p>{t(suggestion)}</p>
+              <button
+                className="button button-secondary button-small"
+                onClick={() => setDraft(t(suggestion))}
+              >
+                Use this question
+              </button>
+            </div>
+          )}
         </div>
-        <footer className="message-composer">
-          <button aria-label="Attach file">
-            <Paperclip />
-          </button>
+        <form
+          className="message-composer"
+          onSubmit={(event) => {
+            event.preventDefault();
+            send();
+          }}
+        >
           <textarea
+            aria-label="Your message"
             value={draft}
             onChange={(event) => setDraft(event.target.value)}
             onKeyDown={(event) => {
-              if (event.key === "Enter" && !event.shiftKey) {
+              if (
+                event.key === "Enter" &&
+                !event.shiftKey &&
+                !event.nativeEvent.isComposing
+              ) {
                 event.preventDefault();
                 send();
               }
             }}
-            rows={1}
+            rows={2}
             placeholder="Write a message…"
           />
           <button
+            type="submit"
             className="send-button"
-            onClick={send}
+            disabled={!draft.trim()}
             aria-label="Send message"
           >
             <Send />
@@ -218,56 +309,61 @@ export function MessageCenter() {
           <small>
             Press Enter to send · Demo messages stay in this session
           </small>
-        </footer>
+        </form>
       </section>
-
       <aside className="chat-context-panel">
         <div className="context-company">
-          <span style={{ background: supplier.logoColor }}>
-            {supplier.shortName}
+          <span style={{ background: active.supplier.logoColor }}>
+            {active.supplier.shortName}
           </span>
-          <h3>{supplier.name}</h3>
-          <p>{supplier.location}</p>
+          <h3>
+            {supplierView ? "Northline Athletics ApS" : active.supplier.name}
+          </h3>
+          <p>
+            {supplierView ? "Copenhagen, Denmark" : active.supplier.location}
+          </p>
           <div>
             <ShieldCheck />
             Business checked
           </div>
         </div>
         <div className="context-section">
-          <strong>Opportunity</strong>
-          <p>{active.rfq}</p>
+          <strong>Your next step</strong>
+          <p>
+            Confirm the order split, material evidence, samples, and timing
+            before proceeding.
+          </p>
           <dl>
             <div>
-              <dt>Status</dt>
-              <dd>Shortlisted</dd>
-            </div>
-            <div>
               <dt>Identity</dt>
-              <dd>Revealed</dd>
+              <dd>Shared with this company</dd>
             </div>
             <div>
-              <dt>Next step</dt>
-              <dd>Samples</dd>
+              <dt>Meeting</dt>
+              <dd>{meetings[active.key] ? "Proposed" : "Not proposed"}</dd>
             </div>
           </dl>
         </div>
-        <div className="context-section">
-          <strong>Shared files</strong>
-          <button className="shared-file">
-            <span>PDF</span>
-            <div>
-              <b>Capability_deck.pdf</b>
-              <small>2.4 MB · Today</small>
-            </div>
-          </button>
-        </div>
         <div className="context-actions">
-          <button onClick={() => toast("Meeting request prepared")}>
-            <CalendarDays />
-            Schedule meeting
-          </button>
-          <button>View company profile</button>
+          {!supplierView && (
+            <Link href={`/suppliers/${active.supplier.id}#verification`}>
+              View evidence
+            </Link>
+          )}
+          <Link
+            href={
+              supplierView
+                ? "/supplier/opportunities"
+                : `/suppliers/${active.supplier.id}`
+            }
+          >
+            {supplierView ? "Opportunities" : "View company profile"}
+          </Link>
         </div>
+        <p className="inbox-note">
+          Company checks do not guarantee quality, delivery, or transaction
+          outcomes.
+        </p>
       </aside>
     </div>
   );

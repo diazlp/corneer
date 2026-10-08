@@ -2,6 +2,284 @@
 export type Locale = "en" | "id";
 
 export const translations: Record<string, string> = {
+  "View your full brief": "Lihat rincian kebutuhan lengkap",
+  "Review your order": "Tinjau kebutuhan Anda",
+  "Remove business check filter": "Hapus filter legalitas usaha",
+  "No description added": "Belum ada deskripsi",
+  "Confirm requirements with the supplier":
+    "Konfirmasikan persyaratan dengan pemasok",
+  "No buyer has shared identity yet":
+    "Belum ada pembeli yang membagikan identitas",
+  "A conversation appears after a buyer chooses your company and shares their identity.":
+    "Percakapan muncul setelah pembeli memilih perusahaan Anda dan membagikan identitasnya.",
+  "Buyers appear here only after sharing their identity with your company.":
+    "Pembeli hanya muncul setelah membagikan identitas kepada perusahaan Anda.",
+  "Thank you for sharing your order. Could we review the specifications, style quantities, and target delivery before confirming a quotation?":
+    "Terima kasih telah membagikan kebutuhan Anda. Bisakah kita meninjau spesifikasi, jumlah per model, dan jadwal pengiriman sebelum mengonfirmasi penawaran?",
+  // Buyer journey and actionable company comparisons
+  "Apparel sourcing for buyers": "Pengadaan apparel untuk pembeli",
+  "Find a supplier for your next": "Temukan pemasok untuk",
+  "apparel order.": "pesanan apparel berikutnya.",
+  "Describe your order, compare what companies can offer, and choose who to contact.":
+    "Jelaskan kebutuhan Anda, bandingkan penawaran perusahaan, lalu pilih siapa yang ingin dihubungi.",
+  "Describe your order": "Jelaskan kebutuhan Anda",
+  "Browse suppliers": "Jelajahi pemasok",
+  "Your company stays private until you choose to share it.":
+    "Identitas perusahaan Anda tetap privat sampai Anda memilih untuk membagikannya.",
+  "Worked example": "Contoh alur pengadaan",
+  "Fictional demo": "Demo fiktif",
+  "A recycled running collection": "Koleksi pakaian lari berbahan daur ulang",
+  "5,000 units · 4 styles · Three different sourcing options":
+    "5.000 unit · 4 model · Tiga pilihan mitra produksi",
+  "Reports comparable running tops. Confirm whether it can produce all four styles.":
+    "Mengaku berpengalaman membuat atasan lari serupa. Pastikan apakah keempat model dapat diproduksi.",
+  "Reports outerwear capability. Suggests another factory for the base layers.":
+    "Melaporkan kemampuan membuat pakaian luar. Menyarankan pabrik lain untuk pakaian lapisan dasar.",
+  "Offers to coordinate two factories. Confirm who will produce each style.":
+    "Menawarkan koordinasi dua pabrik. Pastikan pabrik yang akan membuat setiap model.",
+  "Walk through an example": "Coba contoh alurnya",
+  "Share the apparel, quantity and timing you need. Your company name stays private.":
+    "Jelaskan jenis pakaian, jumlah, dan jadwal yang Anda butuhkan. Nama perusahaan Anda tetap privat.",
+  "Review companies": "Tinjau perusahaan",
+  "Compare supplier responses, evidence and questions still to resolve.":
+    "Bandingkan respons pemasok, bukti, dan hal yang masih perlu dikonfirmasi.",
+  "Choose who to contact": "Pilih siapa yang dihubungi",
+  "Save a shortlist, then decide who can see your identity and start a conversation.":
+    "Simpan pilihan pemasok, lalu tentukan siapa yang dapat melihat identitas Anda dan mulai berdiskusi.",
+  "Explore the demo directory": "Jelajahi direktori demo",
+  "Meet the companies behind the apparel": "Kenali perusahaan pembuatnya",
+  "Browse fictional manufacturers and trading companies. Each profile shows company type, capabilities and supporting evidence.":
+    "Jelajahi produsen dan perusahaan dagang fiktif. Setiap profil memuat jenis perusahaan, kemampuan, dan bukti pendukung.",
+  "Understand the evidence": "Pahami buktinya",
+  "What the checks tell you": "Arti setiap pemeriksaan",
+  "Each label explains where the information comes from.":
+    "Setiap label menjelaskan sumber informasinya.",
+  Checked: "Dicek",
+  "Business registration and representative identity matched against submitted records.":
+    "Registrasi usaha dan identitas perwakilan dicocokkan dengan dokumen yang diberikan.",
+  Reviewed: "Ditinjau",
+  "Factory or certification evidence inspected. This does not establish future performance.":
+    "Bukti pabrik atau sertifikasi telah ditinjau. Ini tidak memastikan kinerja di masa depan.",
+  "Company-reported": "Dilaporkan perusahaan",
+  "Capabilities, quantities, prices and timelines supplied by the company. Confirm them before ordering.":
+    "Kemampuan, jumlah, harga, dan jadwal berasal dari perusahaan. Konfirmasikan sebelum memesan.",
+  "Corneer does not guarantee quality, delivery, payment or transaction outcomes.":
+    "Corneer tidak menjamin kualitas, pengiriman, pembayaran, atau hasil transaksi.",
+  "A frontend proof of concept for apparel sourcing. All companies and opportunities are fictional. Requests and messages are not sent to real companies.":
+    "Konsep frontend untuk pengadaan apparel. Semua perusahaan dan peluang fiktif. Permintaan dan pesan tidak dikirim ke perusahaan nyata.",
+  "My requests": "Permintaan saya",
+  "More to explore": "Jelajahi lainnya",
+  "Product examples": "Contoh produk",
+  "Try the journey": "Coba alurnya",
+  "Review responses, choose companies and control identity sharing.":
+    "Tinjau respons, pilih perusahaan, dan tentukan akses ke identitas Anda.",
+  "Frontend demo · Fictional companies and opportunities":
+    "Demo frontend · Perusahaan dan peluang fiktif",
+  "Switch demo view": "Ganti tampilan demo",
+  "Demo view": "Tampilan demo",
+  "Close navigation": "Tutup menu",
+  "Your order": "Kebutuhan Anda",
+  "To be discussed": "Untuk didiskusikan",
+  "Not published": "Belum diterbitkan",
+  "Just now": "Baru saja",
+  "Not shared yet": "Belum dibagikan",
+  "Order preview created. No suppliers contacted.":
+    "Pratinjau kebutuhan dibuat. Belum ada pemasok yang dihubungi.",
+  "Start with what you need made.": "Mulai dari produk yang Anda butuhkan.",
+  "Review companies before deciding who to contact.":
+    "Tinjau perusahaan sebelum memilih siapa yang dihubungi.",
+  "Your company stays private.": "Identitas perusahaan Anda tetap privat.",
+  "You choose the company that receives your identity when you open a conversation.":
+    "Anda memilih perusahaan penerima identitas saat membuka percakapan.",
+  "What should a supplier know?": "Apa yang perlu diketahui pemasok?",
+  "Check your order": "Periksa kebutuhan Anda",
+  "A few details help you narrow the company list.":
+    "Beberapa rincian membantu mempersempit pilihan perusahaan.",
+  "Add what you know. You can discuss the rest with a supplier.":
+    "Isi informasi yang sudah Anda ketahui. Sisanya dapat dibahas dengan pemasok.",
+  "This creates a demo preview. Your order and company identity are not sent to anyone.":
+    "Langkah ini membuat pratinjau demo. Kebutuhan dan identitas perusahaan Anda tidak dikirim ke siapa pun.",
+  "Reviewing company:": "Meninjau perusahaan:",
+  "Order title": "Judul kebutuhan produksi",
+  "For example: private-label pilates sets":
+    "Contoh: set pilates untuk merek sendiri",
+  "Keep your company name and contact details out of the brief.":
+    "Jangan sertakan nama perusahaan atau kontak dalam rincian kebutuhan.",
+  "Total units": "Jumlah unit total",
+  "Number of styles": "Jumlah model",
+  "Different garment designs.": "Desain pakaian yang berbeda.",
+  "Colors per style": "Warna per model",
+  "Used to estimate units per style and color.":
+    "Untuk memperkirakan jumlah unit per model dan warna.",
+  "Describe the order": "Jelaskan kebutuhan produksi",
+  "What are you making, and what help do you need?":
+    "Produk apa yang ingin dibuat dan bantuan apa yang Anda butuhkan?",
+  "Optional. Avoid names, email addresses, and identifying links.":
+    "Opsional. Hindari nama, alamat email, dan tautan yang mengungkap identitas.",
+  "For example: matte nylon / elastane": "Contoh: nilon matte / elastana",
+  "City and country": "Kota dan negara",
+  "Design specifications": "Spesifikasi desain",
+  "Often called a tech pack: measurements, materials, and construction details.":
+    "Sering disebut tech pack: ukuran, bahan, dan rincian konstruksi produk.",
+  "Capabilities you need": "Kemampuan yang dibutuhkan",
+  "Material documentation needs confirmation for this order.":
+    "Dokumen bahan untuk pesanan ini perlu dikonfirmasi.",
+  "Edit order": "Ubah kebutuhan",
+  "Units per style and color": "Unit per model dan warna",
+  "Edit details": "Ubah rincian",
+  "First you will see fictional companies whose listed categories match your order. Prices, availability, and production capability still need confirmation.":
+    "Anda akan melihat perusahaan fiktif yang mencantumkan kategori produk sesuai kebutuhan Anda. Harga, ketersediaan, dan kemampuan produksi masih perlu dikonfirmasi.",
+  Cancel: "Batal",
+  "Your company": "Perusahaan Anda",
+  "Private until you choose to share":
+    "Privat sampai Anda memilih untuk berbagi",
+  "Company preview": "Pratinjau perusahaan",
+  "Which company is worth a conversation?":
+    "Perusahaan mana yang ingin Anda ajak berdiskusi?",
+  "Compare what each company offers and what you still need to confirm.":
+    "Bandingkan penawaran setiap perusahaan dan hal yang masih perlu dikonfirmasi.",
+  "Based on fictional profiles. No suppliers have received your order or sent a quote.":
+    "Berdasarkan profil fiktif. Belum ada pemasok yang menerima kebutuhan Anda atau mengirim penawaran.",
+  "Listed capabilities are company-reported. Identity checks do not establish production quality or availability.":
+    "Kemampuan yang tercantum dilaporkan perusahaan. Pemeriksaan identitas tidak memastikan kualitas produksi atau ketersediaan.",
+  "No companies list this category":
+    "Belum ada perusahaan yang mencantumkan kategori ini",
+  "Try a broader category or browse companies to discuss your needs.":
+    "Coba kategori yang lebih luas atau jelajahi perusahaan untuk membahas kebutuhan Anda.",
+  Selected: "Dipilih",
+  Price: "Harga",
+  "Ask the supplier": "Tanyakan kepada pemasok",
+  "Final quote after specifications":
+    "Harga final setelah spesifikasi ditinjau",
+  "No quote received": "Belum ada penawaran",
+  "Availability unconfirmed": "Ketersediaan belum dikonfirmasi",
+  "Company-reported; confirm order split":
+    "Dilaporkan perusahaan; konfirmasikan pembagian pesanan",
+  "Why consider this company": "Alasan mempertimbangkan perusahaan ini",
+  "This company lists your product category.":
+    "Perusahaan ini mencantumkan kategori produk yang Anda butuhkan.",
+  "This company does not list your product category. Ask whether it can support your order.":
+    "Perusahaan ini tidak mencantumkan kategori produk Anda. Tanyakan apakah dapat memenuhi kebutuhan Anda.",
+  "Listed in its profile": "Tercantum di profil",
+  "Confirm before proceeding": "Konfirmasikan sebelum melanjutkan",
+  "These capabilities are not listed in the profile. This does not prove they are unavailable.":
+    "Kemampuan ini tidak tercantum di profil. Hal ini tidak berarti perusahaan tidak memilikinya.",
+  "Ask about style and color minimums, material documentation, samples, and the delivery schedule.":
+    "Tanyakan minimum per model dan warna, dokumen bahan, sampel, serta jadwal pengiriman.",
+  "Read the supplier response": "Baca respons pemasok",
+  "Remove from shortlist": "Hapus dari daftar pilihan",
+  "Save to shortlist": "Simpan ke daftar pilihan",
+  "Your next step": "Langkah berikutnya",
+  "Start with a shortlist": "Mulai dengan daftar pilihan",
+  "Select one company. Only that company will receive your identity when you share it.":
+    "Pilih satu perusahaan. Hanya perusahaan tersebut yang akan menerima identitas saat Anda membagikannya.",
+  "Save a company that interests you. Saving does not contact it or share your identity.":
+    "Simpan perusahaan yang menarik bagi Anda. Menyimpan tidak menghubunginya atau membagikan identitas Anda.",
+  "Shared with this company": "Dibagikan kepada perusahaan ini",
+  "What you will share": "Informasi yang akan dibagikan",
+  "Recipient:": "Penerima:",
+  "Share identity with this company": "Bagikan identitas kepada perusahaan ini",
+  "You can now discuss the order in a demo conversation.":
+    "Anda kini dapat membahas kebutuhan dalam percakapan demo.",
+  "Shares the demo company profile and website. Other companies keep seeing the anonymous summary.":
+    "Membagikan profil dan situs perusahaan demo. Perusahaan lain tetap melihat ringkasan anonim.",
+  "Demo only. No company is contacted. This session resets on reload.":
+    "Hanya demo. Tidak ada perusahaan yang dihubungi. Sesi kembali ke awal saat halaman dimuat ulang.",
+  "Sourcing steps": "Langkah pengadaan",
+  "This demo preview has expired": "Pratinjau demo ini sudah berakhir",
+  "Demo orders stay in memory and reset when the page reloads.":
+    "Kebutuhan demo tersimpan selama sesi dan kembali ke awal saat halaman dimuat ulang.",
+  "Your order preview": "Pratinjau kebutuhan Anda",
+  "Example sourcing request": "Contoh permintaan produksi",
+  "Not published. Review companies before choosing who to contact.":
+    "Belum diterbitkan. Tinjau perusahaan sebelum memilih siapa yang dihubungi.",
+  "Fictional order and responses. Try choosing a supplier and opening a conversation.":
+    "Kebutuhan dan respons fiktif. Coba pilih pemasok dan buka percakapan.",
+  "Describe another order": "Jelaskan kebutuhan lainnya",
+  "Choose a company before starting a conversation":
+    "Pilih perusahaan sebelum membuka percakapan",
+  "Review companies, save one to your shortlist, then deliberately share your identity with that company.":
+    "Tinjau perusahaan, simpan ke daftar pilihan, lalu bagikan identitas secara sadar kepada perusahaan tersebut.",
+  "Could you confirm the minimum per style and color, material documentation, sampling time, and availability for our delivery date?":
+    "Bisakah Anda mengonfirmasi minimum per model dan warna, dokumen bahan, waktu pembuatan sampel, serta ketersediaan untuk jadwal pengiriman kami?",
+  "Your conversations": "Percakapan Anda",
+  "Only companies you shared your identity with appear here.":
+    "Hanya perusahaan yang telah menerima identitas Anda yang muncul di sini.",
+  "Ready to discuss your order": "Siap membahas kebutuhan Anda",
+  "Propose a meeting": "Usulkan pertemuan",
+  "View order": "Lihat kebutuhan",
+  "Company identity shared for this conversation":
+    "Identitas perusahaan dibagikan untuk percakapan ini",
+  "Demo conversation. Messages and meeting proposals stay in this session; nothing is sent externally.":
+    "Percakapan demo. Pesan dan usulan pertemuan hanya tersimpan dalam sesi ini; tidak ada yang dikirim keluar.",
+  "Meeting proposed": "Pertemuan diusulkan",
+  "Awaiting confirmation. No calendar invitation sent.":
+    "Menunggu konfirmasi. Undangan kalender tidak dikirim.",
+  "Suggest a time to discuss the order":
+    "Usulkan waktu untuk membahas kebutuhan",
+  "Date and time": "Tanggal dan waktu",
+  "Time zone": "Zona waktu",
+  "Save meeting proposal": "Simpan usulan pertemuan",
+  "Demo message": "Pesan demo",
+  "A useful first question": "Pertanyaan untuk memulai diskusi",
+  "Use this question": "Gunakan pertanyaan ini",
+  "Your message": "Pesan Anda",
+  "Confirm the order split, material evidence, samples, and timing before proceeding.":
+    "Konfirmasikan pembagian pesanan, bukti bahan, sampel, dan jadwal sebelum melanjutkan.",
+  Proposed: "Diusulkan",
+  "Not proposed": "Belum diusulkan",
+  "Company checks do not guarantee quality, delivery, or transaction outcomes.":
+    "Pemeriksaan perusahaan tidak menjamin kualitas, pengiriman, atau hasil transaksi.",
+  "Supplier location": "Lokasi pemasok",
+  "Describe your order to review companies against your requirements.":
+    "Jelaskan kebutuhan Anda untuk meninjau perusahaan berdasarkan persyaratan produksi.",
+  "Describe your order →": "Jelaskan kebutuhan Anda →",
+  "Company name": "Nama perusahaan",
+  "Lowest minimum order": "Pesanan minimum terendah",
+  "Longest operating history": "Pengalaman usaha terlama",
+  "300 units or fewer": "300 unit atau kurang",
+  "500 units or fewer": "500 unit atau kurang",
+  "Discuss an order": "Bahas kebutuhan produksi",
+  "My sourcing requests": "Permintaan produksi saya",
+  "Review companies, choose a shortlist, and decide who to contact.":
+    "Tinjau perusahaan, simpan daftar pilihan, dan tentukan siapa yang dihubungi.",
+  "Your orders and examples": "Kebutuhan Anda dan contoh demo",
+  "New order previews stay in this demo session. The examples below are fictional.":
+    "Pratinjau kebutuhan baru tersimpan dalam sesi demo ini. Contoh di bawah bersifat fiktif.",
+  "supplier responses": "respons pemasok",
+  "in your shortlist": "dalam daftar pilihan",
+  "identity shares": "penerima identitas",
+  "No quotes received": "Belum ada penawaran",
+  "Saving a supplier does not share your company identity. You choose a specific recipient before opening a conversation.":
+    "Menyimpan pemasok tidak membagikan identitas perusahaan Anda. Anda memilih penerima tertentu sebelum membuka percakapan.",
+  "Browse apparel suppliers": "Jelajahi pemasok apparel",
+  "Compare companies by what they make, their minimum orders, and the evidence reviewed. Choose a company to discuss your order.":
+    "Bandingkan produk yang dibuat, pesanan minimum, dan bukti yang ditinjau. Pilih perusahaan untuk membahas kebutuhan Anda.",
+  "About this company": "Tentang perusahaan ini",
+  "First describe your order. You choose whether to share your identity before opening a conversation.":
+    "Jelaskan kebutuhan Anda terlebih dahulu. Anda memilih apakah akan membagikan identitas sebelum membuka percakapan.",
+  "Discuss an order →": "Bahas kebutuhan produksi →",
+  "Review buyer requests": "Tinjau permintaan pembeli",
+  "These are fictional opportunities. A demo response appears in the buyer comparison during this session.":
+    "Peluang ini fiktif. Respons demo muncul pada perbandingan pembeli selama sesi ini.",
+  "Example opportunities": "Contoh peluang",
+  "Review the requirement before deciding whether your company can support it.":
+    "Tinjau kebutuhan sebelum memutuskan apakah perusahaan Anda dapat memenuhinya.",
+  "Demo response added to the buyer comparison":
+    "Respons demo ditambahkan ke perbandingan pembeli",
+  "Reports comparable running tops. Coverage of all four styles still needs confirmation.":
+    "Melaporkan pengalaman membuat atasan lari serupa. Kemampuan membuat keempat model masih perlu dikonfirmasi.",
+  "Can you produce all four styles, and provide material documentation for this order?":
+    "Bisakah Anda membuat keempat model dan memberikan dokumen bahan untuk pesanan ini?",
+  "Offers the shell and bonded styles, but suggests another factory for base layers.":
+    "Menawarkan jaket dan model bonded, tetapi menyarankan pabrik lain untuk pakaian lapisan dasar.",
+  "Which styles would you make, and who would own coordination with the other factory?":
+    "Model mana yang akan Anda buat dan siapa yang bertanggung jawab mengoordinasikan pabrik lain?",
+  "A trading company proposing two specialist factories with one development contact.":
+    "Perusahaan dagang yang mengusulkan dua pabrik spesialis dengan satu kontak pengembangan.",
+  "Which factories would make each style, and how would samples and quality checks be coordinated?":
+    "Pabrik mana yang akan membuat setiap model dan bagaimana sampel serta pemeriksaan kualitas dikoordinasikan?",
+
   // Shared navigation, trust language, and marketplace terms
   "Interactive concept · All companies and opportunities are fictional":
     "Konsep interaktif · Semua perusahaan dan peluang di sini fiktif",
@@ -896,6 +1174,11 @@ export const translations: Record<string, string> = {
 };
 
 const patterns: Array<[RegExp, (parts: RegExpMatchArray) => string]> = [
+  [
+    /^(\d+) units \/ (\d+) styles \/ (\d+) colors$/,
+    ([, units, styles, colors]) =>
+      `${units} unit / ${styles} model / ${colors} warna`,
+  ],
   [/^(\d[\d,.]*) years$/, ([, count]) => `${count.replaceAll(",", ".")} tahun`],
   [/^(\d[\d,.]*) units$/, ([, count]) => `${count.replaceAll(",", ".")} unit`],
   [

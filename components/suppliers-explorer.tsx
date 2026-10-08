@@ -5,7 +5,6 @@ import { Filter, Search, SlidersHorizontal, X } from "lucide-react";
 import Link from "next/link";
 import { suppliers } from "@/lib/data";
 import { SupplierCard } from "@/components/ui";
-import { useDemo } from "@/components/demo-provider";
 import { translate } from "@/lib/i18n";
 
 const categories = [
@@ -18,40 +17,78 @@ const categories = [
   "Athleisure",
 ];
 
-export function SuppliersExplorer() {
-  const { locale } = useDemo();
-  const [query, setQuery] = useState("");
+export function SuppliersExplorer({
+  initialQuery = "",
+}: {
+  initialQuery?: string;
+}) {
+  const [query, setQuery] = useState(initialQuery);
   const [category, setCategory] = useState("All");
   const [companyType, setCompanyType] = useState("All company types");
   const [location, setLocation] = useState("All locations");
   const [verifiedOnly, setVerifiedOnly] = useState(true);
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [minimum, setMinimum] = useState(0);
+  const [required, setRequired] = useState<string[]>([]);
+  const [sort, setSort] = useState("name");
 
   const filtered = useMemo(
     () =>
-      suppliers.filter((supplier) => {
-        const terms = [
-          supplier.name,
-          supplier.location,
-          ...supplier.categories,
-          ...supplier.capabilities,
-          ...supplier.materials,
-        ];
-        const haystack = [
-          ...terms,
-          ...terms.map((term) => translate(locale, term)),
-        ]
-          .join(" ")
-          .toLowerCase();
-        return (
-          (!query || haystack.includes(query.toLowerCase())) &&
-          (category === "All" || supplier.categories.includes(category)) &&
-          (companyType === "All company types" ||
-            supplier.type === companyType) &&
-          (location === "All locations" || supplier.countryCode === location)
-        );
-      }),
-    [query, category, companyType, location, locale],
+      suppliers
+        .filter((supplier) => {
+          const terms = [
+            supplier.name,
+            supplier.type,
+            supplier.location,
+            ...supplier.categories,
+            ...supplier.capabilities,
+            ...supplier.materials,
+          ];
+          const haystack = [
+            ...terms,
+            ...terms.map((term) => translate("id", term)),
+          ]
+            .join(" ")
+            .toLowerCase();
+          return (
+            (!query ||
+              query
+                .toLowerCase()
+                .trim()
+                .split(/\s+/)
+                .every((term) => haystack.includes(term))) &&
+            (category === "All" || supplier.categories.includes(category)) &&
+            (companyType === "All company types" ||
+              supplier.type === companyType) &&
+            (location === "All locations" ||
+              supplier.countryCode === location) &&
+            (!verifiedOnly ||
+              supplier.verification.some(
+                (check) =>
+                  check.label === "Business registration" &&
+                  check.state === "checked",
+              )) &&
+            (!minimum || supplier.moq <= minimum) &&
+            required.every((item) => supplier.capabilities.includes(item))
+          );
+        })
+        .sort((a, b) =>
+          sort === "moq"
+            ? a.moq - b.moq
+            : sort === "years"
+              ? b.years - a.years
+              : a.name.localeCompare(b.name),
+        ),
+    [
+      query,
+      category,
+      companyType,
+      location,
+      verifiedOnly,
+      minimum,
+      required,
+      sort,
+    ],
   );
 
   const clearFilters = () => {
@@ -59,6 +96,9 @@ export function SuppliersExplorer() {
     setCategory("All");
     setCompanyType("All company types");
     setLocation("All locations");
+    setMinimum(0);
+    setRequired([]);
+    setVerifiedOnly(false);
   };
 
   return (
@@ -67,6 +107,7 @@ export function SuppliersExplorer() {
         <label className="directory-search">
           <Search size={19} />
           <input
+            aria-label="Search suppliers"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Search capabilities, materials, or companies"
@@ -78,6 +119,7 @@ export function SuppliersExplorer() {
           )}
         </label>
         <select
+          aria-label="Supplier location"
           value={location}
           onChange={(event) => setLocation(event.target.value)}
         >
@@ -86,6 +128,7 @@ export function SuppliersExplorer() {
           <option value="HK">Hong Kong</option>
         </select>
         <select
+          aria-label="Company type"
           value={companyType}
           onChange={(event) => setCompanyType(event.target.value)}
         >
@@ -110,6 +153,7 @@ export function SuppliersExplorer() {
           <button
             key={item}
             className={item === category ? "active" : ""}
+            aria-pressed={item === category}
             onClick={() => setCategory(item)}
           >
             {item}
@@ -137,28 +181,38 @@ export function SuppliersExplorer() {
               <span />
               Business checked
             </label>
-            <label className="check-control muted">
-              <input type="checkbox" disabled />
-              <span />
-              On-site audited <small>Soon</small>
-            </label>
           </div>
           <div className="filter-group">
             <strong>Minimum order</strong>
             <label className="radio-control">
-              <input type="radio" name="moq" defaultChecked />
+              <input
+                type="radio"
+                name="moq"
+                checked={minimum === 0}
+                onChange={() => setMinimum(0)}
+              />
               <span />
               Any quantity
             </label>
             <label className="radio-control">
-              <input type="radio" name="moq" />
+              <input
+                type="radio"
+                name="moq"
+                checked={minimum === 300}
+                onChange={() => setMinimum(300)}
+              />
               <span />
-              Under 300 units
+              300 units or fewer
             </label>
             <label className="radio-control">
-              <input type="radio" name="moq" />
+              <input
+                type="radio"
+                name="moq"
+                checked={minimum === 500}
+                onChange={() => setMinimum(500)}
+              />
               <span />
-              Under 500 units
+              500 units or fewer
             </label>
           </div>
           <div className="filter-group">
@@ -166,12 +220,22 @@ export function SuppliersExplorer() {
             {[
               "Pattern development",
               "Flatlock stitching",
-              "Sublimation",
+              "Full sublimation",
               "Private labeling",
               "Seamless knitting",
             ].map((item) => (
               <label className="check-control" key={item}>
-                <input type="checkbox" />
+                <input
+                  type="checkbox"
+                  checked={required.includes(item)}
+                  onChange={(event) =>
+                    setRequired((current) =>
+                      event.target.checked
+                        ? [...current, item]
+                        : current.filter((value) => value !== item),
+                    )
+                  }
+                />
                 <span />
                 {item}
               </label>
@@ -180,10 +244,9 @@ export function SuppliersExplorer() {
           <div className="filter-help">
             <strong>Can’t find the right fit?</strong>
             <p>
-              Publish a private sourcing request and let relevant suppliers
-              respond.
+              Describe your order to review companies against your requirements.
             </p>
-            <Link href="/buyer/rfqs/new">Create RFQ →</Link>
+            <Link href="/buyer/rfqs/new">Describe your order →</Link>
           </div>
         </aside>
 
@@ -193,18 +256,26 @@ export function SuppliersExplorer() {
               <strong>{filtered.length} companies</strong>
               <span> · Hong Kong & Mainland China</span>
             </div>
-            <select aria-label="Sort results">
-              <option>Best match</option>
-              <option>Fastest response</option>
-              <option>Lowest MOQ</option>
-              <option>Most established</option>
+            <select
+              aria-label="Sort results"
+              value={sort}
+              onChange={(event) => setSort(event.target.value)}
+            >
+              <option value="name">Company name</option>
+              <option value="moq">Lowest minimum order</option>
+              <option value="years">Longest operating history</option>
             </select>
           </div>
           {verifiedOnly && (
             <div className="active-filter">
               <span>
                 Business checked{" "}
-                <button onClick={() => setVerifiedOnly(false)}>×</button>
+                <button
+                  aria-label="Remove business check filter"
+                  onClick={() => setVerifiedOnly(false)}
+                >
+                  ×
+                </button>
               </span>
               <p>
                 Checks indicate reviewed evidence, not guaranteed performance.

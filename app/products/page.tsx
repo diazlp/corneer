@@ -1,9 +1,10 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Search, SlidersHorizontal } from "lucide-react";
+import { Search } from "lucide-react";
 import { products, suppliers } from "@/lib/data";
 import { ProductCard } from "@/components/ui";
+import { translate } from "@/lib/i18n";
 
 export default function ProductsPage() {
   const [query, setQuery] = useState("");
@@ -17,7 +18,18 @@ export default function ProductsPage() {
       products.filter(
         (product) =>
           (category === "All products" || product.category === category) &&
-          [product.name, product.material, ...product.tags]
+          [
+            product.name,
+            product.category,
+            product.material,
+            ...product.tags,
+            ...[
+              product.name,
+              product.category,
+              product.material,
+              ...product.tags,
+            ].map((term) => translate("id", term)),
+          ]
             .join(" ")
             .toLowerCase()
             .includes(query.toLowerCase()),
@@ -50,25 +62,24 @@ export default function ProductsPage() {
           <label>
             <Search size={18} />
             <input
+              aria-label="Search products or materials"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Search products or materials"
             />
           </label>
           <div className="product-tabs">
-            {categories.slice(0, 6).map((item) => (
+            {categories.map((item) => (
               <button
                 key={item}
                 onClick={() => setCategory(item)}
                 className={category === item ? "active" : ""}
+                aria-pressed={category === item}
               >
                 {item}
               </button>
             ))}
           </div>
-          <button className="icon-button">
-            <SlidersHorizontal size={17} />
-          </button>
         </div>
         <div className="product-grid product-directory-grid">
           {visible.map((product) => (

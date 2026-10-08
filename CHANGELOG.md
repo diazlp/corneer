@@ -14,8 +14,22 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Frontend POC acceptance checklist.
 - Proprietary repository license notice.
 - English and Bahasa Indonesia demo language switch with centralized copy.
+- Distinct titles, canonical URLs, a public sitemap, robots rules, website and
+  breadcrumb structured data, and noindex workspace metadata.
+- A shared vector logo, matching browser and Apple icons, and a branded sharing
+  thumbnail with Open Graph and large-image social-card metadata.
+- Production HTTP checks for SEO, sharing crawlers, and brand assets.
 
 ### Changed
+
+- Simplified the buyer entry to describing an order, reviewing companies, and
+  choosing who to contact; moved demo roles to a secondary control.
+- Connected temporary order previews, supplier replies, request shortlists,
+  recipient-specific identity sharing, conversations, and meeting proposals.
+- Replaced fit percentages with reported capability comparisons, MOQ conflicts,
+  supplier tradeoffs, and questions to confirm before proceeding.
+- Made directory filters and sorting functional and carried profile contact
+  choices into the order form. Added Bahasa Indonesia copy for the new journey.
 
 - Increased the interface type scale to a 12px minimum for compact copy.
 - Widened shared desktop layouts and reduced page-level horizontal gutters.

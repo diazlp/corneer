@@ -17,9 +17,11 @@ data before implementing authentication or persistence.
 
 ### Buyer journey
 
-- [x] Buyer workspace summarizes active RFQs, responses, shortlists, and meetings.
-- [x] Three-step RFQ form captures requirement, production details, and privacy.
-- [x] Response comparison shows company context, fit, price range, lead time, and MOQ.
+- [x] Buyer workspace lists examples and temporary order previews with actual
+      session response, shortlist, and identity-share counts.
+- [x] Three-step order form captures requirement, production details, and review.
+- [x] Response comparison shows company context, reported capabilities,
+      tradeoffs, price range, lead time, and minimum-order conflicts.
 - [x] Buyer can shortlist a supplier.
 - [x] Buyer can deliberately reveal its company identity.
 
@@ -70,8 +72,9 @@ data before implementing authentication or persistence.
 1. Open `/` and select the Buyer demo role.
 2. Open `/buyer/rfqs/new` and complete all three steps.
 3. Open `/buyer/rfqs/rfq-recycled-running`.
-4. Shortlist Pearl River Performance Wear and reveal buyer identity.
+4. Save Pearl River Performance Wear and explicitly share identity with it.
 5. Open `/messages` and send a local demonstration message.
-6. Switch to Supplier and open `/supplier/opportunities/rfq-recycled-running`.
+6. Use Demo view in the top bar to switch to Supplier and open
+   `/supplier/opportunities/rfq-recycled-running`.
 7. Submit the demonstration supplier response.
 8. Switch to Admin and approve the checked verification items.

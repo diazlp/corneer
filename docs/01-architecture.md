@@ -11,7 +11,11 @@ implemented.
 - Plain CSS design system and responsive rules in `app/globals.css`.
 - Fictional marketplace records in `lib/data.ts`.
 - Shared marketplace and workspace components in `components/`.
-- Static generation for supplier and RFQ detail routes.
+- Server metadata in `lib/seo.ts`, public sitemap and robots routes, and shared
+  self-hosted brand assets. Workspace layouts apply noindex metadata.
+- Static generation for fictional supplier and RFQ detail routes, with dynamic
+  buyer detail support for temporary order previews. Query-aware request,
+  directory, and messaging routes use server page props.
 
 ## Current data flow
 
@@ -27,6 +31,17 @@ flowchart LR
 There is no server database, real account, private file store, or durable
 message history. Refreshing the page returns the demonstration to its seeded
 state.
+
+`DemoProvider` also owns temporary order briefs, supplier responses, shortlists
+and identity recipients keyed by request, and messages/meeting proposals keyed
+by request and supplier. `lib/sourcing.ts` compares explicit fictional profile
+fields. It neither scores supplier reliability nor verifies capabilities.
+
+Temporary `demo-<uuid>` request links expire on reload and display a recovery
+action. New briefs are previews and never enter the supplier opportunity feed.
+Supplier demo responses update the matching buyer comparison in the same
+session. Conversation lists are derived from explicit identity recipients;
+there are no pre-opened threads implying that the buyer already shared identity.
 
 ## Folder ownership
 

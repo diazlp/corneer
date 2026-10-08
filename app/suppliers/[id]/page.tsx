@@ -18,6 +18,23 @@ import {
 import { getProductsForSupplier, getSupplier, suppliers } from "@/lib/data";
 import { ProductCard, TrustNote } from "@/components/ui";
 import { ProfileActions } from "@/components/profile-actions";
+import { JsonLd } from "@/components/json-ld";
+import { breadcrumbData, pageMetadata } from "@/lib/seo";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const company = getSupplier(id);
+  if (!company) notFound();
+  return pageMetadata(
+    company.name,
+    `Meet ${company.name}, a fictional ${company.type.toLowerCase()} in ${company.location}. View reported capabilities, minimum orders, and evidence.`,
+    `/suppliers/${id}`,
+  );
+}
 
 export function generateStaticParams() {
   return suppliers.map((supplier) => ({ id: supplier.id }));
@@ -35,6 +52,13 @@ export default async function SupplierProfilePage({
 
   return (
     <main className="profile-page">
+      <JsonLd
+        data={breadcrumbData([
+          { name: "Corneer", path: "/" },
+          { name: "Apparel suppliers", path: "/suppliers" },
+          { name: supplier.name, path: `/suppliers/${id}` },
+        ])}
+      />
       <div className="container breadcrumb">
         <Link href="/suppliers">
           <ArrowLeft size={14} />
@@ -70,7 +94,7 @@ export default async function SupplierProfilePage({
               Established {2026 - supplier.years}
             </p>
           </div>
-          <ProfileActions supplierName={supplier.name} />
+          <ProfileActions supplierId={supplier.id} />
         </div>
       </section>
 
@@ -89,7 +113,7 @@ export default async function SupplierProfilePage({
         <div className="profile-main">
           <section id="overview" className="profile-section">
             <span className="eyebrow">Company overview</span>
-            <h2>Production built around performance.</h2>
+            <h2>About this company</h2>
             <p className="profile-lead">{supplier.about}</p>
             <div className="company-facts">
               <div>
@@ -238,12 +262,18 @@ export default async function SupplierProfilePage({
               Tell {supplier.name} what you need. Your company identity stays
               under your control.
             </p>
-            <button className="button button-dark">Contact supplier</button>
-            <Link className="button button-secondary" href="/buyer/rfqs/new">
-              Invite to an RFQ
+            <Link
+              className="button button-dark"
+              href={{
+                pathname: "/buyer/rfqs/new",
+                query: { supplier: supplier.id },
+              }}
+            >
+              Discuss an order
             </Link>
             <small>
-              No public email scraping. Messages start inside Corneer.
+              First describe your order. You choose whether to share your
+              identity before opening a conversation.
             </small>
           </div>
           <div className="sidebar-card">
@@ -261,10 +291,6 @@ export default async function SupplierProfilePage({
                 <dt>Minimum order</dt>
                 <dd>From {supplier.moq} units</dd>
               </div>
-              <div>
-                <dt>Response rate</dt>
-                <dd>{supplier.responseRate}%</dd>
-              </div>
             </dl>
           </div>
           <div className="sidebar-card">
@@ -273,7 +299,15 @@ export default async function SupplierProfilePage({
               Ask a question about a check or request additional documentation
               after starting an inquiry.
             </p>
-            <button className="plain-button">Ask about verification →</button>
+            <Link
+              className="text-link"
+              href={{
+                pathname: "/buyer/rfqs/new",
+                query: { supplier: supplier.id },
+              }}
+            >
+              Discuss an order →
+            </Link>
           </div>
         </aside>
       </div>

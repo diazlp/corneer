@@ -52,9 +52,6 @@ export function SupplierCard({ supplier }: { supplier: Supplier }) {
           <Building2 size={13} />
           {supplier.type}
         </span>
-        <span className="supplier-fit">
-          <strong>{supplier.responseRate}%</strong> response
-        </span>
       </Link>
       <div className="supplier-card-body">
         <div className="supplier-title-row">
@@ -154,7 +151,7 @@ export function RFQCard({ rfq, href }: { rfq: RFQ; href: string }) {
         >
           {rfq.status}
         </span>
-        <span className="match-score">{rfq.fit}% fit</span>
+        <span className="match-score">{rfq.category}</span>
       </div>
       <h3>
         <Link href={href}>{rfq.title}</Link>

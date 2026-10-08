@@ -5,15 +5,18 @@ import {
   useContext,
   useEffect,
   useLayoutEffect,
-  useMemo,
   useRef,
   useState,
 } from "react";
 import { Locale, translate } from "@/lib/i18n";
+import { RFQ, RFQResponse, rfqs, rfqResponses } from "@/lib/data";
+import { canReveal } from "@/lib/sourcing";
+import { usePathname } from "next/navigation";
 
 export type DemoRole = "public" | "buyer" | "supplier" | "admin";
 
 type Toast = { id: number; message: string } | null;
+export type DemoMessage = { id: string; text: string; side: "me" | "them" };
 
 type DemoContextValue = {
   locale: Locale;
@@ -21,10 +24,18 @@ type DemoContextValue = {
   t: (source: string) => string;
   role: DemoRole;
   setRole: (role: DemoRole) => void;
-  identityRevealed: boolean;
-  revealIdentity: () => void;
-  shortlisted: string[];
-  toggleShortlist: (supplierId: string) => void;
+  requests: RFQ[];
+  responses: RFQResponse[];
+  createRequest: (request: RFQ) => void;
+  addResponse: (response: RFQResponse) => void;
+  shortlists: Record<string, string[]>;
+  reveals: Record<string, string[]>;
+  revealIdentity: (requestId: string, supplierId: string) => void;
+  toggleShortlist: (requestId: string, supplierId: string) => void;
+  messages: Record<string, DemoMessage[]>;
+  sendMessage: (key: string, text: string) => void;
+  meetings: Record<string, string>;
+  requestMeeting: (key: string, date: string) => void;
   toast: (message: string) => void;
 };
 
@@ -33,9 +44,26 @@ const DemoContext = createContext<DemoContextValue | null>(null);
 export function DemoProvider({ children }: { children: React.ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>("id");
   const [localeReady, setLocaleReady] = useState(false);
-  const [role, setRoleState] = useState<DemoRole>("public");
-  const [identityRevealed, setIdentityRevealed] = useState(false);
-  const [shortlisted, setShortlisted] = useState<string[]>(["pearl-river"]);
+  const [selectedRole, setRoleState] = useState<DemoRole>("public");
+  const pathname = usePathname();
+  const routeRole: DemoRole | undefined = pathname.startsWith("/buyer/")
+    ? "buyer"
+    : pathname.startsWith("/supplier/")
+      ? "supplier"
+      : pathname.startsWith("/admin/")
+        ? "admin"
+        : undefined;
+  const role =
+    routeRole ??
+    (pathname === "/messages" && selectedRole !== "supplier"
+      ? "buyer"
+      : selectedRole);
+  const [requests, setRequests] = useState(rfqs);
+  const [responses, setResponses] = useState(rfqResponses);
+  const [shortlists, setShortlists] = useState<Record<string, string[]>>({});
+  const [reveals, setReveals] = useState<Record<string, string[]>>({});
+  const [messages, setMessages] = useState<Record<string, DemoMessage[]>>({});
+  const [meetings, setMeetings] = useState<Record<string, string>>({});
   const [activeToast, setActiveToast] = useState<Toast>(null);
   const originalText = useRef(new WeakMap<Text, string>());
   const originalAttributes = useRef(
@@ -45,6 +73,11 @@ export function DemoProvider({ children }: { children: React.ReactNode }) {
     new WeakMap<HTMLInputElement | HTMLTextAreaElement, string>(),
   );
   const initialLocalizationDone = useRef(false);
+
+  useEffect(() => {
+    if (!routeRole) return;
+    queueMicrotask(() => setRoleState(routeRole));
+  }, [routeRole]);
 
   useLayoutEffect(() => {
     let mounted = true;
@@ -166,7 +199,6 @@ export function DemoProvider({ children }: { children: React.ReactNode }) {
 
   const setRole = (nextRole: DemoRole) => {
     setRoleState(nextRole);
-    window.localStorage.setItem("corneer-demo-role", nextRole);
   };
 
   const toast = (message: string) => {
@@ -178,37 +210,73 @@ export function DemoProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
-  const value = useMemo(
-    () => ({
-      locale,
-      setLocale,
-      t: (source: string) => translate(locale, source),
-      role,
-      setRole,
-      identityRevealed,
-      revealIdentity: () => {
-        setIdentityRevealed(true);
-        toast("Buyer identity shared with Pearl River Performance Wear");
-      },
-      shortlisted,
-      toggleShortlist: (supplierId: string) => {
-        setShortlisted((current) =>
-          current.includes(supplierId)
-            ? current.filter((id) => id !== supplierId)
-            : [...current, supplierId],
-        );
-      },
-      toast,
-    }),
-    [locale, role, identityRevealed, shortlisted],
-  );
+  const value: DemoContextValue = {
+    locale,
+    setLocale,
+    t: (source: string) => translate(locale, source),
+    role,
+    setRole,
+    requests,
+    responses,
+    createRequest: (request) => setRequests((current) => [request, ...current]),
+    addResponse: (response) =>
+      setResponses((current) => [
+        ...current.filter(
+          (item) =>
+            !(
+              item.rfqId === response.rfqId &&
+              item.supplierId === response.supplierId
+            ),
+        ),
+        response,
+      ]),
+    shortlists,
+    reveals,
+    revealIdentity: (requestId, supplierId) => {
+      if (!canReveal(shortlists[requestId] ?? [], supplierId)) return;
+      setReveals((current) => ({
+        ...current,
+        [requestId]: [...new Set([...(current[requestId] ?? []), supplierId])],
+      }));
+    },
+    toggleShortlist: (requestId, supplierId) => {
+      setShortlists((current) => {
+        const selected = current[requestId] ?? [];
+        return {
+          ...current,
+          [requestId]: selected.includes(supplierId)
+            ? selected.filter((id) => id !== supplierId)
+            : [...selected, supplierId],
+        };
+      });
+    },
+    messages,
+    sendMessage: (key, text) => {
+      if (!text.trim()) return;
+      setMessages((current) => ({
+        ...current,
+        [key]: [
+          ...(current[key] ?? []),
+          {
+            id: crypto.randomUUID(),
+            side: role === "supplier" ? "them" : "me",
+            text: text.trim(),
+          },
+        ],
+      }));
+    },
+    meetings,
+    requestMeeting: (key, date) =>
+      setMeetings((current) => ({ ...current, [key]: date })),
+    toast,
+  };
 
   return (
     <DemoContext.Provider value={value}>
       <div id="corneer-app">
         {children}
         {activeToast && (
-          <div className="toast">
+          <div className="toast" role="status">
             <span>✓</span>
             {activeToast.message}
           </div>

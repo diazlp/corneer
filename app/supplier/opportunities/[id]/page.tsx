@@ -14,6 +14,23 @@ import {
 } from "lucide-react";
 import { getRFQ, rfqs } from "@/lib/data";
 import { SupplierResponseForm } from "@/components/supplier-response-form";
+import { pageMetadata } from "@/lib/seo";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const request = getRFQ(id);
+  if (!request) notFound();
+  return pageMetadata(
+    `${request.title} — Supplier opportunity`,
+    "Review this fictional apparel brief and submit a demonstration company response. Buyer identity remains private until an explicit share.",
+    `/supplier/opportunities/${id}`,
+    false,
+  );
+}
 
 export function generateStaticParams() {
   return rfqs.map((rfq) => ({ id: rfq.id }));
@@ -41,7 +58,7 @@ export default async function OpportunityDetailPage({
       <section className="opportunity-detail-hero">
         <div className="container">
           <div className="opportunity-detail-badges">
-            <span className="match-score">{rfq.fit}% company fit</span>
+            <span className="match-score">{rfq.category}</span>
             <span
               className={`status status-${rfq.status.toLowerCase().replaceAll(" ", "-")}`}
             >
@@ -144,7 +161,7 @@ export default async function OpportunityDetailPage({
           </section>
         </article>
         <aside className="response-form-wrap">
-          <SupplierResponseForm />
+          <SupplierResponseForm rfqId={rfq.id} />
         </aside>
       </div>
     </main>

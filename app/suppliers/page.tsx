@@ -1,21 +1,29 @@
 import { BadgeCheck, Globe2, ShieldCheck } from "lucide-react";
 import { SuppliersExplorer } from "@/components/suppliers-explorer";
+import { pageMetadata } from "@/lib/seo";
 
-export default function SuppliersPage() {
+export const metadata = pageMetadata(
+  "Apparel manufacturers & sourcing companies",
+  "Browse fictional apparel manufacturers and trading companies by category, minimum order, capabilities, and reviewed evidence in the Corneer demo.",
+  "/suppliers",
+);
+
+export default async function SuppliersPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string | string[] }>;
+}) {
+  const { q } = await searchParams;
   return (
     <main className="directory-page">
       <section className="directory-hero">
         <div className="container directory-hero-inner">
           <div>
             <span className="eyebrow">Supplier directory</span>
-            <h1>
-              Find the company
-              <br />
-              behind the capability.
-            </h1>
+            <h1>Browse apparel suppliers</h1>
             <p>
-              Explore sportswear production partners with transparent company
-              types, capabilities, and evidence checks.
+              Compare companies by what they make, their minimum orders, and the
+              evidence reviewed. Choose a company to discuss your order.
             </p>
           </div>
           <div className="directory-hero-proof">
@@ -41,7 +49,7 @@ export default function SuppliersPage() {
         </div>
       </section>
       <section className="container directory-content">
-        <SuppliersExplorer />
+        <SuppliersExplorer initialQuery={typeof q === "string" ? q : ""} />
       </section>
     </main>
   );

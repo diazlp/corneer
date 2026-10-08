@@ -2,15 +2,8 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import {
-  Bell,
-  ChevronDown,
-  Menu,
-  MessageSquare,
-  Search,
-  X,
-} from "lucide-react";
-import { useState } from "react";
+import { ChevronDown, Menu, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { DemoRole, useDemo } from "@/components/demo-provider";
 
 const roleHomes: Record<DemoRole, string> = {
@@ -22,14 +15,13 @@ const roleHomes: Record<DemoRole, string> = {
 
 const navItems: Record<DemoRole, { label: string; href: string }[]> = {
   public: [
-    { label: "Find suppliers", href: "/suppliers" },
-    { label: "Browse products", href: "/products" },
+    { label: "Browse suppliers", href: "/suppliers" },
+    { label: "My requests", href: "/buyer/rfqs" },
     { label: "How it works", href: "/#how-it-works" },
   ],
   buyer: [
-    { label: "My RFQs", href: "/buyer/rfqs" },
-    { label: "Find suppliers", href: "/suppliers" },
-    { label: "Products", href: "/products" },
+    { label: "Browse suppliers", href: "/suppliers" },
+    { label: "My requests", href: "/buyer/rfqs" },
     { label: "Messages", href: "/messages" },
   ],
   supplier: [
@@ -51,17 +43,34 @@ export function SiteHeader() {
   const router = useRouter();
   const [roleOpen, setRoleOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const effectiveRole: DemoRole = pathname.startsWith("/buyer/")
-    ? "buyer"
-    : pathname.startsWith("/supplier/opportunities")
-      ? "supplier"
-      : pathname.startsWith("/admin/")
-        ? "admin"
-        : pathname.startsWith("/messages")
-          ? role === "supplier"
-            ? "supplier"
-            : "buyer"
-          : role;
+  const roleMenuRef = useRef<HTMLDivElement>(null);
+  const roleTriggerRef = useRef<HTMLButtonElement>(null);
+  const headerRef = useRef<HTMLElement>(null);
+  const mobileTriggerRef = useRef<HTMLButtonElement>(null);
+  const effectiveRole = role;
+
+  useEffect(() => {
+    if (!roleOpen && !mobileOpen) return;
+
+    const dismissOutside = (event: PointerEvent) => {
+      if (!(event.target instanceof Node)) return;
+      if (!roleMenuRef.current?.contains(event.target)) setRoleOpen(false);
+      if (!headerRef.current?.contains(event.target)) setMobileOpen(false);
+    };
+    const dismissEscape = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      if (roleOpen) roleTriggerRef.current?.focus();
+      if (mobileOpen) mobileTriggerRef.current?.focus();
+      setRoleOpen(false);
+      setMobileOpen(false);
+    };
+    document.addEventListener("pointerdown", dismissOutside);
+    document.addEventListener("keydown", dismissEscape);
+    return () => {
+      document.removeEventListener("pointerdown", dismissOutside);
+      document.removeEventListener("keydown", dismissEscape);
+    };
+  }, [roleOpen, mobileOpen]);
 
   const changeRole = (nextRole: DemoRole) => {
     setRole(nextRole);
@@ -73,20 +82,77 @@ export function SiteHeader() {
   return (
     <>
       <div className="demo-bar">
-        <span className="demo-pulse" />
-        Interactive concept · All companies and opportunities are fictional
+        <div className="container demo-controls">
+          <span>Frontend demo · Fictional companies and opportunities</span>
+          <div className="role-menu" ref={roleMenuRef}>
+            <button
+              ref={roleTriggerRef}
+              type="button"
+              className="role-trigger demo-switch"
+              onClick={() => setRoleOpen(!roleOpen)}
+              aria-expanded={roleOpen}
+              aria-controls="demo-role-options"
+              aria-label="Switch demo view"
+            >
+              <span className={`role-avatar role-${effectiveRole}`}>
+                {effectiveRole === "public"
+                  ? "D"
+                  : effectiveRole.charAt(0).toUpperCase()}
+              </span>
+              <span>
+                <small>Demo view</small>
+                {effectiveRole === "public" ? "Visitor" : effectiveRole}
+              </span>
+              <ChevronDown size={15} />
+            </button>
+            {roleOpen && (
+              <div className="role-dropdown" id="demo-role-options">
+                {(["public", "buyer", "supplier", "admin"] as DemoRole[]).map(
+                  (item) => (
+                    <button
+                      type="button"
+                      key={item}
+                      onClick={() => changeRole(item)}
+                      className={effectiveRole === item ? "selected" : ""}
+                      aria-pressed={effectiveRole === item}
+                    >
+                      <span className={`role-avatar role-${item}`}>
+                        {item === "public" ? "D" : item.charAt(0).toUpperCase()}
+                      </span>
+                      <span>
+                        {item === "public" ? "Visitor" : item}
+                        <small>
+                          {item === "public"
+                            ? "Public marketplace"
+                            : `${item} workspace`}
+                        </small>
+                      </span>
+                      {effectiveRole === item && (
+                        <span className="checkmark">✓</span>
+                      )}
+                    </button>
+                  ),
+                )}
+              </div>
+            )}
+          </div>
+        </div>
       </div>
-      <header className="site-header">
+      <header className="site-header" ref={headerRef}>
         <div className="container header-inner">
           <Link
-            href={roleHomes[effectiveRole]}
+            href="/"
             className="brand"
             aria-label="Corneer home"
+            onClick={() => setMobileOpen(false)}
           >
-            <span className="brand-mark">
-              <i />
-              <i />
-            </span>
+            <img
+              className="brand-mark"
+              src="/icon.svg"
+              width={32}
+              height={32}
+              alt=""
+            />
             <span>CORNEER</span>
           </Link>
 
@@ -94,7 +160,16 @@ export function SiteHeader() {
             {navItems[effectiveRole].map((item) => (
               <Link
                 key={item.href + item.label}
-                className={pathname === item.href ? "active" : ""}
+                className={
+                  pathname === item.href || pathname.startsWith(item.href + "/")
+                    ? "active"
+                    : ""
+                }
+                aria-current={
+                  pathname === item.href || pathname.startsWith(item.href + "/")
+                    ? "page"
+                    : undefined
+                }
                 href={item.href}
               >
                 {item.label}
@@ -127,82 +202,25 @@ export function SiteHeader() {
                 EN
               </button>
             </div>
-            {effectiveRole !== "public" && (
-              <>
-                <Link
-                  className="icon-button desktop-only"
-                  href="/messages"
-                  aria-label="Messages"
-                >
-                  <MessageSquare size={18} />
-                </Link>
-                <button
-                  className="icon-button desktop-only"
-                  aria-label="Notifications"
-                >
-                  <Bell size={18} />
-                  <span className="notification-dot" />
-                </button>
-              </>
-            )}
-            <div className="role-menu">
-              <button
-                className="role-trigger"
-                onClick={() => setRoleOpen(!roleOpen)}
-              >
-                <span className={`role-avatar role-${effectiveRole}`}>
-                  {effectiveRole === "public"
-                    ? "D"
-                    : effectiveRole.charAt(0).toUpperCase()}
-                </span>
-                <span>
-                  <small>View demo as</small>
-                  {effectiveRole === "public" ? "Visitor" : effectiveRole}
-                </span>
-                <ChevronDown size={15} />
-              </button>
-              {roleOpen && (
-                <div className="role-dropdown">
-                  {(["public", "buyer", "supplier", "admin"] as DemoRole[]).map(
-                    (item) => (
-                      <button
-                        key={item}
-                        onClick={() => changeRole(item)}
-                        className={effectiveRole === item ? "selected" : ""}
-                      >
-                        <span className={`role-avatar role-${item}`}>
-                          {item === "public"
-                            ? "D"
-                            : item.charAt(0).toUpperCase()}
-                        </span>
-                        <span>
-                          {item === "public" ? "Visitor" : item}
-                          <small>
-                            {item === "public"
-                              ? "Public marketplace"
-                              : `${item} workspace`}
-                          </small>
-                        </span>
-                        {effectiveRole === item && (
-                          <span className="checkmark">✓</span>
-                        )}
-                      </button>
-                    ),
-                  )}
-                </div>
-              )}
-            </div>
             <button
+              ref={mobileTriggerRef}
+              type="button"
               className="mobile-menu-button"
               onClick={() => setMobileOpen(!mobileOpen)}
-              aria-label="Open navigation"
+              aria-label={mobileOpen ? "Close navigation" : "Open navigation"}
+              aria-expanded={mobileOpen}
+              aria-controls="mobile-navigation"
             >
               {mobileOpen ? <X /> : <Menu />}
             </button>
           </div>
         </div>
         {mobileOpen && (
-          <nav className="mobile-nav">
+          <nav
+            className="mobile-nav"
+            id="mobile-navigation"
+            aria-label="Primary navigation"
+          >
             {navItems[effectiveRole].map((item) => (
               <Link
                 key={item.href + item.label}
@@ -212,9 +230,6 @@ export function SiteHeader() {
                 {item.label}
               </Link>
             ))}
-            <Link href="/suppliers" onClick={() => setMobileOpen(false)}>
-              <Search size={16} /> Search marketplace
-            </Link>
           </nav>
         )}
       </header>

@@ -1,11 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Send, ShieldCheck, Upload } from "lucide-react";
+import { Check, Send, ShieldCheck } from "lucide-react";
 import { useDemo } from "@/components/demo-provider";
 
-export function SupplierResponseForm() {
-  const { toast } = useDemo();
+export function SupplierResponseForm({ rfqId }: { rfqId: string }) {
+  const { toast, addResponse, responses } = useDemo();
+  const existing = responses.find(
+    (item) => item.rfqId === rfqId && item.supplierId === "pearl-river",
+  );
   const [sent, setSent] = useState(false);
 
   if (sent) {
@@ -35,8 +38,21 @@ export function SupplierResponseForm() {
       className="supplier-response-form"
       onSubmit={(event) => {
         event.preventDefault();
+        const values = new FormData(event.currentTarget);
+        addResponse({
+          id: `response-${rfqId}-pearl-river`,
+          rfqId,
+          supplierId: "pearl-river",
+          fit: 0,
+          note: String(values.get("note")).trim(),
+          priceRange: String(values.get("price")).trim(),
+          leadTime: String(values.get("lead")).trim(),
+          moq: String(values.get("moq")).trim(),
+          samplingTime: String(values.get("sampling")).trim(),
+          status: "New",
+        });
         setSent(true);
-        toast("Response sent to the verified buyer");
+        toast("Demo response added to the buyer comparison");
       }}
     >
       <div className="response-form-heading">
@@ -55,54 +71,37 @@ export function SupplierResponseForm() {
         <span>Why is your company a good fit?</span>
         <textarea
           rows={5}
-          defaultValue="We currently produce comparable bonded running tops for two Northern European brands and can source GRS-certified recycled fabrics from our existing mill partners."
+          name="note"
+          required
+          defaultValue={existing?.note ?? ""}
         />
       </label>
       <div className="form-grid compact-grid">
         <label className="field">
           <span>Indicative price range</span>
-          <input defaultValue="$8.40–$16.80 / unit" />
+          <input
+            name="price"
+            required
+            defaultValue={existing?.priceRange ?? ""}
+          />
         </label>
         <label className="field">
           <span>Production lead time</span>
-          <input defaultValue="75–90 days" />
+          <input name="lead" required defaultValue={existing?.leadTime ?? ""} />
         </label>
         <label className="field">
           <span>Minimum order</span>
-          <input defaultValue="300 / style-color" />
+          <input
+            name="moq"
+            required
+            defaultValue={existing?.moq ?? "300 / style-color"}
+          />
         </label>
         <label className="field">
           <span>Sampling time</span>
-          <input defaultValue="14–18 days" />
+          <input name="sampling" defaultValue={existing?.samplingTime ?? ""} />
         </label>
       </div>
-      <fieldset className="field option-field">
-        <legend>Confirm matching capabilities</legend>
-        <div className="option-grid response-options">
-          {[
-            "GRS material access",
-            "Flatlock stitching",
-            "Bonded hems",
-            "EU export experience",
-          ].map((item) => (
-            <label key={item}>
-              <input type="checkbox" defaultChecked />
-              <span>
-                <Check />
-              </span>
-              {item}
-            </label>
-          ))}
-        </div>
-      </fieldset>
-      <label className="upload-field">
-        <input type="file" />
-        <Upload />
-        <span>
-          <strong>Attach non-confidential supporting material</strong>Capability
-          deck or relevant product sheet · Demo only
-        </span>
-      </label>
       <div className="response-disclaimer">
         <ShieldCheck />
         <p>

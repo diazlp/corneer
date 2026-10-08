@@ -60,6 +60,12 @@ export type RFQ = {
   posted: string;
   fit: number;
   visibility: string;
+  order?: { units: number; styles: number; colors: number };
+  capabilities?: string[];
+  techPack?: string;
+  documentation?: string;
+  invitedSupplierId?: string;
+  preview?: boolean;
 };
 
 export type RFQResponse = {
@@ -72,6 +78,9 @@ export type RFQResponse = {
   moq: string;
   note: string;
   status: "New" | "Shortlisted" | "Reviewing";
+  samplingTime?: string;
+  consideration?: string;
+  question?: string;
 };
 
 export const products: Product[] = [
@@ -551,6 +560,8 @@ export const suppliers: Supplier[] = [
 export const rfqs: RFQ[] = [
   {
     id: "rfq-recycled-running",
+    order: { units: 5000, styles: 4, colors: 2 },
+    capabilities: ["Flatlock stitching", "Bonded seams", "Private labeling"],
     title: "Recycled running collection — SS27",
     buyerLabel: "Verified performance-wear brand",
     buyerLocation: "Copenhagen, Denmark",
@@ -577,6 +588,8 @@ export const rfqs: RFQ[] = [
   },
   {
     id: "rfq-club-kits",
+    order: { units: 2400, styles: 18, colors: 1 },
+    capabilities: ["Full sublimation", "Name and number personalization"],
     title: "Custom football kits for 18 community clubs",
     buyerLabel: "Verified teamwear distributor",
     buyerLocation: "Manchester, United Kingdom",
@@ -602,6 +615,8 @@ export const rfqs: RFQ[] = [
   },
   {
     id: "rfq-pilates-set",
+    order: { units: 800, styles: 2, colors: 2 },
+    capabilities: ["Pattern development", "Private labeling"],
     title: "Premium private-label pilates sets",
     buyerLabel: "Verified multi-site studio",
     buyerLocation: "Melbourne, Australia",
@@ -630,6 +645,10 @@ export const rfqs: RFQ[] = [
 export const rfqResponses: RFQResponse[] = [
   {
     id: "response-pr",
+    consideration:
+      "Reports comparable running tops. Coverage of all four styles still needs confirmation.",
+    question:
+      "Can you produce all four styles, and provide material documentation for this order?",
     rfqId: "rfq-recycled-running",
     supplierId: "pearl-river",
     fit: 96,
@@ -641,6 +660,10 @@ export const rfqResponses: RFQResponse[] = [
   },
   {
     id: "response-st",
+    consideration:
+      "Offers the shell and bonded styles, but suggests another factory for base layers.",
+    question:
+      "Which styles would you make, and who would own coordination with the other factory?",
     rfqId: "rfq-recycled-running",
     supplierId: "summit-outerwear",
     fit: 89,
@@ -652,6 +675,10 @@ export const rfqResponses: RFQResponse[] = [
   },
   {
     id: "response-hs",
+    consideration:
+      "A trading company proposing two specialist factories with one development contact.",
+    question:
+      "Which factories would make each style, and how would samples and quality checks be coordinated?",
     rfqId: "rfq-recycled-running",
     supplierId: "harbor-stitch",
     fit: 86,
