@@ -20,6 +20,8 @@ marketplace demand still require buyer testing.
 - [x] Supplier replies update the same-session buyer comparison.
 - [x] Directory filters and sorting work; profile contact keeps the selected company.
 - [x] Bahasa Indonesia and English cover the new journey.
+- [x] Separate English and Bahasa Indonesia guides explain all three user roles,
+      include flowcharts, and provide an easy demo walkthrough.
 - [x] Buyer screens fit at 320px, 390px, 768px, and desktop widths.
 - [x] Reloaded temporary links explain expiration and offer a recovery action.
 - [x] Sourcing assertions and the complete format/lint/type/build gate pass.

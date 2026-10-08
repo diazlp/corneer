@@ -8,6 +8,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Separate English and Bahasa Indonesia user journey guides with simple steps,
+  role flowcharts, and a connected demo walkthrough.
+
 - Prettier configuration and formatting scripts.
 - Combined formatting, linting, type-checking, and build quality gate.
 - Root project README and numbered architecture, product, and frontend guides.

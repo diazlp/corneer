@@ -91,6 +91,8 @@ the optimized production build, and actual SEO/sharing-bot HTTP responses.
 
 ## Documentation
 
+- [User journey guide — English](docs/english/user-journey.md) — simple steps and flowcharts for Visitor, Buyer, and Supplier.
+- [Panduan alur pengguna — Bahasa Indonesia](docs/bahasa/user-journey.md) — langkah sederhana dan diagram alur untuk Pengunjung, Pembeli, dan Pemasok.
 - [`docs/01-architecture.md`](docs/01-architecture.md) — current frontend boundaries, state, and future backend seam.
 - [`docs/02-product-scope.md`](docs/02-product-scope.md) — product promise, personas, trust language, and POC exclusions.
 - [`docs/03-frontend-guide.md`](docs/03-frontend-guide.md) — route map, role journeys, component ownership, and browser checks.

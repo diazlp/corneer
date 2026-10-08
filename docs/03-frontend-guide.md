@@ -2,6 +2,11 @@
 
 This is the developer and reviewer map for the frontend proof of concept.
 
+For a simple walkthrough of each role, see the user journey guides in
+[English](english/user-journey.md) and
+[Bahasa Indonesia](bahasa/user-journey.md). Both include flowcharts, actual button
+labels, and a connected demo exercise with the current frontend limitations.
+
 ## Product surface
 
 ```mermaid
