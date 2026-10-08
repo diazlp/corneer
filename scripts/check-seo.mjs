@@ -106,12 +106,12 @@ try {
     );
     assert.equal(meta(html, "og:title"), title, `${path}: sharing title`);
     assert.equal(meta(html, "twitter:title"), title);
-    assert.equal(meta(html, "og:image"), `${origin}/share-card.png`);
+    assert.equal(meta(html, "og:image"), `${origin}/share-card.png?v=2`);
     assert.equal(meta(html, "og:image:width"), "1200");
     assert.equal(meta(html, "og:image:height"), "630");
     assert.ok(meta(html, "og:image:alt").includes("Corneer"));
     assert.equal(meta(html, "twitter:card"), "summary_large_image");
-    assert.equal(meta(html, "twitter:image"), `${origin}/share-card.png`);
+    assert.equal(meta(html, "twitter:image"), `${origin}/share-card.png?v=2`);
     const publicPage =
       path === "/" || path === "/products" || path.startsWith("/suppliers");
     const canonicalTags = [
@@ -158,7 +158,7 @@ try {
     new RegExp(`rel="canonical" href="${origin}/suppliers"`),
   );
   const facebook = await request("/", "facebookexternalhit/1.1");
-  assert.equal(meta(facebook.html, "og:image"), `${origin}/share-card.png`);
+  assert.equal(meta(facebook.html, "og:image"), `${origin}/share-card.png?v=2`);
   const sitemap = await request("/sitemap.xml");
   const listed = [...sitemap.html.matchAll(/<loc>(.*?)<\/loc>/g)]
     .map(([, url]) => new URL(url).pathname)
@@ -175,7 +175,7 @@ try {
     "Crawlers need rendering assets",
   );
   for (const [path, width, height] of [
-    ["/share-card.png", 1200, 630],
+    ["/share-card.png?v=2", 1200, 630],
     ["/apple-icon.png", 180, 180],
     ["/logo.png", 512, 512],
   ]) {

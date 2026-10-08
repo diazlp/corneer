@@ -5,7 +5,7 @@ export const siteUrl = new URL(
 ).origin;
 
 export const shareImage = {
-  url: `${siteUrl}/share-card.png`,
+  url: `${siteUrl}/share-card.png?v=2`,
   width: 1200,
   height: 630,
   alt: "Corneer apparel sourcing: describe your order, review companies, choose who to contact.",

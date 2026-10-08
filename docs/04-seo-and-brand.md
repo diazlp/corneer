@@ -29,11 +29,14 @@ JSON-LD escapes `<` before rendering.
 ## Sharing previews and logo
 
 Every page supplies its own Open Graph and Twitter title and description, with
-the same branded **1200 × 630 PNG** at `/share-card.png`. `summary_large_image`
+the same branded **1200 × 630 PNG** at `/share-card.png?v=2`. `summary_large_image`
 requests a large preview. The image is public and requires no sign-in or
 JavaScript. Sharing services control their preview layouts and caching.
 
-`app/icon.svg` is the source logo used directly in the header. It also generates
+`app/icon.svg` is the source logo used directly in the header: four corners of a
+wide rectangle, like a maximize-window control. The lime mark sits on a forest
+tile. The sharing-image version changed with the logo to refresh image caches.
+It also generates
 the ICO containing 16, 32, 48, 64, and 256px images, a 64px PNG browser icon, a
 180px Apple icon, and a 512px logo. Next.js emits icon links from file conventions.
 

@@ -22,6 +22,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Replaced the chevron brand mark with rectangular maximize-window corners in
+  the header, browser icons, and sharing thumbnail.
+
 - Simplified the buyer entry to describing an order, reviewing companies, and
   choosing who to contact; moved demo roles to a secondary control.
 - Connected temporary order previews, supplier replies, request shortlists,

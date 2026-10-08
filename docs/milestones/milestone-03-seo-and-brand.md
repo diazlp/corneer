@@ -8,6 +8,8 @@
 - [x] Sitemap and robots responses are valid and publicly accessible.
 - [x] Website and breadcrumb structured data describe the actual demo.
 - [x] Header, SVG, ICO, PNG, and Apple icons share the same logo source.
+- [x] The rectangular maximize-window mark replaces the previous chevrons in
+      every generated asset, including the versioned sharing thumbnail.
 - [x] Shared pages advertise the branded 1200 × 630 thumbnail.
 - [x] Sharing crawlers receive page metadata without JavaScript.
 - [x] Production response checks and the full quality gate pass.
